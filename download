@@ -1,0 +1,39 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────
+# Annif Setup Script
+# Im Codespace ausführen: bash setup.sh
+# ─────────────────────────────────────────────────────────────
+
+set -e
+
+echo "=== 1. Annif Version prüfen ==="
+annif --version
+
+echo ""
+echo "=== 2. Vokabular laden ==="
+annif loadvoc rvk-hessen data/vocab_hessen_hessisch.tsv
+echo "✓ Vokabular geladen"
+
+echo ""
+echo "=== 3. Lexikalisches Projekt initialisieren ==="
+# Kein Training nötig – lexikalisch sucht direkt im Vokabular
+echo "✓ rvk-lexical ist sofort einsatzbereit"
+
+echo ""
+echo "=== 4. TF-IDF trainieren ==="
+echo "   (Das dauert je nach Datenmenge 1-5 Minuten)"
+annif train rvk-tfidf data/training_hessen_50plus.tsv
+echo "✓ TF-IDF trainiert"
+
+echo ""
+echo "=== 5. Kurztest ==="
+echo "Philosophie der Sprache und Linguistik" | annif suggest rvk-tfidf
+echo ""
+
+echo "=== Setup abgeschlossen ==="
+echo ""
+echo "Annif starten mit:"
+echo "  annif run --host 0.0.0.0 --port 5000"
+echo ""
+echo "Dann in GitHub Codespace: Port 5000 auf 'Public' stellen"
+echo "Die öffentliche URL findest du unter: Ports → Port 5000 → URL kopieren"
